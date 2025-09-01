@@ -1,4 +1,18 @@
 <!DOCTYPE html>
+<!--
+  Interactive Map — simple mapping demo using Leaflet and static JSON data.
+  Purpose: provide a lightweight example showing how to initialize a map,
+  load geo-located markers from `data/locations.json`, and filter/search
+  them from the UI controls at the top of the page.
+
+  Files of interest:
+    - script.js           => application entry (imports modules)
+    - modules/map.js      => initializes Leaflet map and controls
+    - modules/markers.js  => loads & renders markers from JSON
+    - modules/search.js   => wires search input and category filter
+    - modules/utils.js    => small utilities (debounce)
+    - data/locations.json => sample location data
+-->
 <html lang="en">
 
 <head>
@@ -81,6 +95,10 @@
 </head>
 
 <body class="bg-white text-gray-900">
+  <!-- Top control bar: search input + category dropdown
+    This is a visual, accessible UI for searching and filtering
+    locations. The form controls are referenced by `modules/search.js`.
+  -->
   <div class="absolute z-10 w-full p-4 flex justify-center">
     <div
       class="w-full max-w-4xl flex items-center gap-3 bg-white bg-opacity-90 p-2 rounded-full shadow-lg backdrop-blur-sm">
@@ -97,9 +115,13 @@
           class="flex-1 bg-transparent p-2 text-sm text-gray-700 placeholder-gray-400 focus:outline-none" />
       </div>
 
-      <!-- Category + avatar (custom dropdown UI) -->
+      <!-- Category dropdown (custom UI) -->
       <div class="relative">
-        <!-- hidden select kept for compatibility with existing JS -->
+        <!-- hidden select kept for compatibility with the JS module.
+       The visible dropdown is a custom UI that mirrors the select's
+       value; scripts dispatch a `change` event on the select so other
+       code can react to updates.
+     -->
         <select id="categorySelect" class="hidden" aria-hidden="true">
           <option value="">All Categories</option>
           <option value="Park">Park</option>
@@ -140,12 +162,14 @@
     </div>
   </div>
 
+  <!-- Main map container. The Leaflet map instance is attached to this DIV. -->
   <div id="map" class="z-0"></div>
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- App Script -->
+  <!-- App Script: imports the module entrypoint which wires the app
+    (map initialization, loading markers, and search hookup). -->
   <script type="module" src="./script.js"></script>
 
 

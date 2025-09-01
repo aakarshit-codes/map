@@ -1,14 +1,23 @@
+// Lightweight Leaflet map wrapper
+// Exports:
+//  - initMap(): create and configure the Leaflet map instance
+//  - getMapInstance(): return the cached map instance for other modules
+
 let mapInstance = null;
 
 /**
- * Initialize the Leaflet map
- * @returns {object} map instance
-*/
-
+ * Initialize the Leaflet map and add minimal UI controls.
+ * Important options:
+ *  - minZoom: prevents zooming out too far for small datasets
+ *  - zoomControl: disabled so we can provide compact custom controls
+ *  - attributionControl: moved to bottom-left with condensed text
+ *
+ * Returns the created map instance (also cached in module scope).
+ */
 export function initMap() {
   // initialize map with modest zoom and minimal controls
   mapInstance = L.map('map', {
-    center: [20.5937, 78.9629],
+    center: [20.5937, 78.9629], // default world-ish center
     zoom: 3,
     minZoom: 3, // prevent zooming out too far
     zoomControl: false, // we'll add a compact control
@@ -26,21 +35,23 @@ export function initMap() {
   mapInstance.setMaxBounds(worldBounds);
   mapInstance.options.maxBoundsViscosity = 1.0;
 
-  // Compact custom zoom control (bottom-right)
-  // subtle attribution (bottom-left)
+  // minimal attribution in bottomleft
   L.control.attribution({ prefix: false, position: 'bottomleft' }).addAttribution('&copy; OpenStreetMap & Carto').addTo(mapInstance);
 
   // Custom compact controls: zoom in, zoom out, locate
+  // This creates a small vertical stack of buttons in the bottom-right.
   const MapControls = L.Control.extend({
     options: { position: 'bottomright' },
     onAdd: function (map) {
       const container = L.DomUtil.create('div', 'map-controls');
 
+      // helper to generate a button with an inline svg icon
       const createBtn = (title, svg) => {
         const btn = L.DomUtil.create('button', 'map-btn', container);
         btn.type = 'button';
         btn.title = title;
         btn.innerHTML = svg;
+        // stop clicks from propagating to the map (so they don't trigger drag/pan)
         L.DomEvent.disableClickPropagation(btn);
         return btn;
       };
@@ -60,8 +71,9 @@ export function initMap() {
           map.zoomOut();
         }
       });
+
+      // ask browser for geolocation; Leaflet will emit 'locationfound' on success
       loc.addEventListener('click', () => {
-        // triggers browser geolocation prompt; map will center on found location
         map.locate({ setView: true, maxZoom: 13 });
       });
 
@@ -71,7 +83,7 @@ export function initMap() {
 
   mapInstance.addControl(new MapControls());
 
-  // location marker handling
+  // location marker handling: show a small circle when the user's location is found
   let _locMarker = null;
   mapInstance.on('locationfound', (e) => {
     if (_locMarker) _locMarker.remove();
@@ -84,8 +96,8 @@ export function initMap() {
     }).addTo(mapInstance);
   });
 
+  // on geolocation error we don't break the app; log to console for debugging
   mapInstance.on('locationerror', (err) => {
-    // keep silent but log for debugging
     console.warn('Location error:', err.message);
   });
 
@@ -93,8 +105,9 @@ export function initMap() {
 }
 
 /**
- * Get the current Leaflet map instance
-*/
+ * Return the created Leaflet map instance.
+ * Other modules import this to add layers/markers and to control view.
+ */
 export function getMapInstance() {
   return mapInstance;
 }
