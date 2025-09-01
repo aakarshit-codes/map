@@ -2,7 +2,7 @@
 
 Lightweight interactive map built with Leaflet and vanilla JavaScript. This project includes a modern, minimal UI, category filtering, and search — all without a build step (CDN dependencies).
 
-## Highlights (what's new)
+## Highlights 
 - Minimal, light basemap (Carto Positron) for a clean look.
 - Custom header UI: rounded search pill and a category dropdown (custom menu + hidden `<select>` kept for compatibility).
 - Modern marker styling: subtle circle markers and simplified popups with rounded corners and soft shadow.
@@ -37,7 +37,6 @@ Notes:
 - `modules/search.js` — Wires search input and category filtering.
 - `modules/utils.js` — Small helpers (debounce, etc.).
 - `data/locations.json` — Locations data (name, lat/lng, category, description).
-- `assets/` — Images used by the header dropdown and other assets.
 
 ## How it works (technical notes)
 - The visible category dropdown is a custom UI; a hidden `<select id="categorySelect">` remains so existing JS can listen to `change` events without modification.
