@@ -20,7 +20,6 @@ Lightweight interactive map built with Leaflet and vanilla JavaScript. This proj
 2. Start a simple HTTP server from the project root (recommended so modules and assets load correctly):
 
 ```bash
-cd /path/to/testing-map
 python3 -m http.server 8000
 ```
 
