@@ -17,13 +17,7 @@ Lightweight interactive map built with Leaflet and vanilla JavaScript. This proj
 
 ## Quick start
 1. Clone or download the repo.
-2. Start a simple HTTP server from the project root (recommended so modules and assets load correctly):
-
-```bash
-python3 -m http.server 8000
-```
-
-3. Open http://localhost:8000 in your browser.
+2. Use an editor live preview (for example VS Code Live Preview or the Live Server extension) to serve the project and get automatic reloads.
 
 Notes:
 - The app loads Leaflet and Tailwind via CDN from `index.html`.
